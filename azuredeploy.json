@@ -13,6 +13,9 @@
         },
          "rgName1": {
             "type": "string"
+        },
+         "rgName2": {
+            "type": "string"
         }
   },
   "resources": [
