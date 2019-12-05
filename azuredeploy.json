@@ -4,6 +4,19 @@
   "parameters": {
   },
   "variables": {
+     
+        "rgLocation": {
+            "type": "string"
+        },
+        "rgName": {
+            "type": "string"
+        },
+         "rgName1": {
+            "type": "string"
+        },
+         "rgName2": {
+            "type": "string"
+        }
   },
   "resources": [
   ],
