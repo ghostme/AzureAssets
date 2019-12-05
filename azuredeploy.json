@@ -10,6 +10,9 @@
         },
         "rgName": {
             "type": "string"
+        },
+         "rgName1": {
+            "type": "string"
         }
   },
   "resources": [
