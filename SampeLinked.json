@@ -28,11 +28,19 @@
     "variables": {
         "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]"
     },
-    "resources": [{
+    "resources": [
+        {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
             "location": "[parameters('appLocation')]",
             "name": "[variables('resourceGroupName')]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "[parameters('appLocation')]",
+            "name": "Test-RG",
             "properties": {}
         },
         {
@@ -66,7 +74,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "sqlDeployment",
-            "resourceGroup": "[variables('resourceGroupName')]",
+            "resourceGroup": "Test-RG",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
             ],
