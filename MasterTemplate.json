@@ -1,0 +1,45 @@
+{
+   "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+   "contentVersion": "1.0.0.1",
+   "parameters": {
+   
+   },
+   "variables": {
+     
+   },
+   "resources": [
+      
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "HubRGDeployment",
+            "dependsOn": [
+              
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/Hub-RG.json",
+                  "contentVersion": "1.0.0.0"
+               }
+              
+            }
+      },
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "SpokeProdRGDeployment",
+            "dependsOn": [
+              "HubRGDeployment"
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/Spoke1_PROD-RG.json",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
+      }
+   ]
+}
