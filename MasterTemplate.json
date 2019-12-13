@@ -3,7 +3,7 @@
    "contentVersion": "1.0.0.0",
    "parameters": {
         "HubRGName": {
-            "defaultValue": "HUB-RG",
+            "defaultValue": "Hub-RG",
             "type": "String"
         },
          "ProdRGName": {
@@ -51,7 +51,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "SpokeProdRGDeployment",
-              "resourceGroup":"Hub-RG",
+              "resourceGroup":"Spoke1_PROD-RG",
             "dependsOn": [
               "HubRGDeployment",
                "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]"
