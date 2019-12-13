@@ -35,7 +35,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "HubRGDeployment",
-            "location":"CanadaCentral",
+          
             "resourceGroup":"Hub-RG",
             "dependsOn": [
             "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"],
@@ -52,7 +52,6 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "SpokeProdRGDeployment",
-            "location":"CanadaCentral",
               "resourceGroup":"Hub-RG",
             "dependsOn": [
               "HubRGDeployment",
