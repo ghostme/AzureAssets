@@ -2,19 +2,43 @@
    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
    "contentVersion": "1.0.0.0",
    "parameters": {
+        "HubRGName": {
+            "defaultValue": "HUB-RG",
+            "type": "String"
+        },
+         "ProdRGName": {
+            "defaultValue": "Spoke1_PROD-RG",
+            "type": "String"
+        }
    
    },
    "variables": {
      
    },
    "resources": [
+       {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Hub-RG",
+            "properties": {}
+      },
+      {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Spoke1_PROD-RG",
+            "properties": {}
+      },
       
       {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "HubRGDeployment",
             "location":"CanadaCentral",
-            "dependsOn": [ ],
+            "resourceGroup":"Hub-RG",
+            "dependsOn": [
+            "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"],
             "properties": {
                "mode": "Incremental",
                "templateLink": {
@@ -29,8 +53,11 @@
             "apiVersion": "2018-05-01",
             "name": "SpokeProdRGDeployment",
             "location":"CanadaCentral",
+              "resourceGroup":"Hub-RG",
             "dependsOn": [
-              "HubRGDeployment"
+              "HubRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]"
+              
             ],
             "properties": {
                "mode": "Incremental",
