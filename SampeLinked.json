@@ -5,7 +5,7 @@
         "appName": {
             "maxLength": 8,
             "type": "string",
-            "defaultValue":"AppTest"
+            "defaultValue":"apptest"
         },
         "appLocation": {
             "defaultValue": "West US 2",
@@ -18,7 +18,7 @@
         },
         "administratorLogin": {
             "type": "string",
-            "defaultValue":"localAdmin"
+            "defaultValue":"localadmin"
         },
         "administratorLoginPassword": {
             "type": "securestring",
