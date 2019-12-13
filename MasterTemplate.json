@@ -1,6 +1,6 @@
 {
    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-   "contentVersion": "1.0.0.1",
+   "contentVersion": "1.0.0.0",
    "parameters": {
    
    },
@@ -13,9 +13,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "HubRGDeployment",
-            "dependsOn": [
-              
-            ],
+            "location":"CanadaCentral",
+            "dependsOn": [ ],
             "properties": {
                "mode": "Incremental",
                "templateLink": {
@@ -29,6 +28,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "SpokeProdRGDeployment",
+            "location":"CanadaCentral",
             "dependsOn": [
               "HubRGDeployment"
             ],
