@@ -35,7 +35,6 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "HubRGDeployment",
-          
             "resourceGroup":"Hub-RG",
             "dependsOn": [
             "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"],
