@@ -9,6 +9,13 @@
     },
     "variables": {},
     "resources": [
+          {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "canadacentral",
+            "name": "Spoke1_PROD-RG.json",
+            "properties": {}
+      },
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-09-01",
