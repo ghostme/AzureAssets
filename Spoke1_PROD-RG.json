@@ -9,16 +9,10 @@
     },
     "variables": {},
     "resources": [
-          {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "canadacentral",
-            "name": "Spoke1_PROD-RG.json",
-            "properties": {}
-      },
+         
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2019-09-01",
+             "apiVersion":"2018-10-01",
             "name": "[parameters('virtualNetworks_Spoke1_PROD_VNET_name')]",
             "location": "canadacentral",
             "properties": {
@@ -55,7 +49,7 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-09-01",
+              "apiVersion":"2018-10-01",
             "name": "[concat(parameters('virtualNetworks_Spoke1_PROD_VNET_name'), '/Spoke1_PROD-SNET-App')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Spoke1_PROD_VNET_name'))]"
