@@ -17,14 +17,14 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.0.1.64/26"
+                        "10.3.0.0/16"
                     ]
                 },
                 "subnets": [
                     {
                         "name": "Spoke1_UAT-SNET-App",
                         "properties": {
-                            "addressPrefix": "10.0.1.64/28",
+                            "addressPrefix": "10.3.0.0/24",
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
@@ -33,7 +33,7 @@
                     {
                         "name": "Spoke1_UAT-SNET-DB",
                         "properties": {
-                            "addressPrefix": "10.0.1.80/28",
+                            "addressPrefix": "10.3.1.0/24",
                             "serviceEndpoints": [],
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",

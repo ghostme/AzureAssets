@@ -7,18 +7,18 @@
             "type": "String"
         },
         "virtualNetworks_HUB_VNET_Prefix": {
-                        "type": "String"
+                        "type": "String",
+                        "defaultValue":"10.0.0/16"
     },
     "HUB-SNET_Prefix": {
-        "type": "String"
+        "type": "String",
+        "defaultValue":"10.0.0/24"
     },
     "AzureFirewallSNET_Prefix": {
-        "type": "String"
-    },
-
-    "GatewaySNET_Prefix": {
-        "type": "String"
+        "type": "String",
+         "defaultValue":"10.1.0/24"
     }
+
     },
 
     "variables": {},
@@ -55,17 +55,8 @@
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
                         }
-                    },
-                    {
-                        "name": "GatewaySNET",
-                        "properties": {
-                            "addressPrefix": "[parameters('GatewaySNET_Prefix')]",
-                            "serviceEndpoints": [],
-                            "delegations": [],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
-                        }
                     }
+                  
                 ],
                 "virtualNetworkPeerings": [],
                 "enableDdosProtection": false,
