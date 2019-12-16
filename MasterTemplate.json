@@ -94,7 +94,7 @@
             }
       },
   
-       {
+      {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "DevDeployment",
@@ -117,7 +117,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "UATDeployment",
-              "resourceGroup":"Spoke1_DEV-RG",
+              "resourceGroup":"Spoke1_UAT-RG",
             "dependsOn": [
               "HubRGDeployment",
                "[resourceId('Microsoft.Resources/resourceGroups/', parameters('UATRGName'))]"
@@ -135,7 +135,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "name": "PeeringDeployment",
-              "resourceGroup":"Spoke1_PROD-RG",
+            "resourceGroup":"Spoke1_PROD-RG",
             "dependsOn": [
               "HubRGDeployment",
               "SpokeProdRGDeployment",
