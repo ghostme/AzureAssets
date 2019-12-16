@@ -13,7 +13,9 @@
    
    },
    "variables": {
-     
+      "peeringTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'LandingZonePeering.json')]",
+      "hubTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Hub-RG.json')]",
+      "spokeProdTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_PROD-RG.json')]"
    },
    "resources": [
        {
@@ -41,7 +43,7 @@
             "properties": {
                "mode": "Incremental",
                "templateLink": {
-                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/Hub-RG.json",
+                  "uri": "[variables('hubTemplateUrl')]",
                   "contentVersion": "1.0.0.0"
                }
               
@@ -60,7 +62,7 @@
             "properties": {
                "mode": "Incremental",
                "templateLink": {
-                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/Spoke1_PROD-RG.json",
+                  "uri": "[variables('spokeProdTemplateUrl')]",
                   "contentVersion": "1.0.0.0"
                }
             
@@ -83,7 +85,7 @@
             "properties": {
                "mode": "Incremental",
                "templateLink": {
-                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/LandingZonePeering.json",
+                  "uri": "[variables('peeringTemplateUrl')]",
                   "contentVersion": "1.0.0.0"
                }
             
