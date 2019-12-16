@@ -54,7 +54,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Spoke1_UAT_VNET_name'))]"
             ],
             "properties": {
-                "addressPrefix": "10.0.1.64/28",
+                "addressPrefix": "10.3.0.0/24",
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Enabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"
@@ -68,7 +68,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Spoke1_UAT_VNET_name'))]"
             ],
             "properties": {
-                "addressPrefix": "10.0.1.80/28",
+                "addressPrefix": "10.3.1.0/24",
                 "serviceEndpoints": [],
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Enabled",
