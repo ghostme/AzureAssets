@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "existingLocalVirtualNetworkName": {
+      "type": "string",
+      "defaultValue":"HUB-VNET",
+      "metadata": {
+        "description": "Set the local VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkName": {
+      "type": "string",
+      "defaultValue":"Spoke1_PROD-VNET",
+      "metadata": {
+        "description": "Set the remote VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkResourceGroupName": {
+      "type": "string",
+        "defaultValue":"Spoke1_PROD-RG",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    },
+     "existingLocalVirtualNetworkResourceGroupName": {
+      "type": "string",
+       "defaultValue":"Hub-RG",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    
+    },
+     "Location": {
+      "type": "string",
+       "defaultValue":"CanadaCentral",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    
+    }
+  },
+  "variables": {
+    "peeringName": "[concat(parameters('existingLocalVirtualNetworkName'), '/hubvnet-to-spokevnet')]",
+    "remotePeeringName": "[concat(parameters('existingRemoteVirtualNetworkName'), '/spoke-vnet-to-hubvnet')]"
+   
+  },
+  "resources": [
+   {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "HubPeeringDeployment",
+            "resourceGroup":"[parameters('existingLocalVirtualNetworkResourceGroupName')]",
+           
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    
+                      "resources": [
+                           {
+                          "apiVersion": "2018-10-01",
+                          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                          "name": "[variables('peeringName')]",
+                          "location": "[parameters('Location')]",
+                          "comments": "This is the peering from Hub-Vnet to Spoke-VNet",
+                          "dependsOn": [
+                        
+                          ],
+                          "properties": {
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteVirtualNetwork": {
+                              "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingRemoteVirtualNetworkResourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingRemoteVirtualNetworkName'))]"
+                           
+
+                            }
+                          }
+                        }
+                       ]
+                       
+                      }
+                    }
+                        
+   },
+   {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "SpokePeeringDeployment",
+            "resourceGroup": "[parameters('existingRemoteVirtualNetworkResourceGroupName')]",
+            "dependsOn": [
+              
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    
+                      "resources": [
+                           {
+                          "apiVersion": "2018-10-01",
+                          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                          "name": "[variables('remotePeeringName')]",
+                          "location": "[parameters('Location')]",
+                          "comments": "This is the peering from Spoke Vnet to HubVnet",
+                          "dependsOn": [
+                         
+                         
+                          ],
+                          "properties": {
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteVirtualNetwork": {
+                          
+                             "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingLocalVirtualNetworkResourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingLocalVirtualNetworkName'))]"
+
+                            }
+                          }
+                        }
+                       ]
+                       
+                      }
+                    }
+                        
+   }
+     
+  ]
+}

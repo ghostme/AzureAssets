@@ -1,0 +1,95 @@
+{
+   "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+   "contentVersion": "1.0.0.1",
+   "parameters": {
+        "HubRGName": {
+            "defaultValue": "Hub-RG",
+            "type": "String"
+        },
+         "ProdRGName": {
+            "defaultValue": "Spoke1_PROD-RG",
+            "type": "String"
+        }
+   
+   },
+   "variables": {
+      "peeringTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'LandingZonePeering.json')]",
+      "hubTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Hub-RG.json')]",
+      "spokeProdTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_PROD-RG.json')]"
+   },
+   "resources": [
+       {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Hub-RG",
+            "properties": {}
+      },
+      {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Spoke1_PROD-RG",
+            "properties": {}
+      },
+      
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "HubRGDeployment",
+            "resourceGroup":"Hub-RG",
+            "dependsOn": [
+            "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "[variables('hubTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+               }
+              
+            }
+      },
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "SpokeProdRGDeployment",
+              "resourceGroup":"Spoke1_PROD-RG",
+            "dependsOn": [
+              "HubRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]"
+              
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "[variables('spokeProdTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
+      },
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "PeeringDeployment",
+              "resourceGroup":"Spoke1_PROD-RG",
+            "dependsOn": [
+              "HubRGDeployment",
+              "SpokeProdRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]",
+                 "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"
+
+           
+              
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "[variables('peeringTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
+      }
+   ]
+}
