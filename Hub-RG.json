@@ -5,27 +5,62 @@
         "virtualNetworks_HUB_VNET_name": {
             "defaultValue": "HUB-VNET",
             "type": "String"
-        }
+        },
+        "virtualNetworks_HUB_VNET_Prefix": {
+                        "type": "String"
     },
+    "HUB-SNET_Prefix": {
+        "type": "String"
+    },
+    "AzureFirewallSNET_Prefix": {
+        "type": "String"
+    },
+
+    "GatewaySNET_Prefix": {
+        "type": "String"
+    }
+    },
+
     "variables": {},
+
     "resources": [
-       
         {
             "type": "Microsoft.Network/virtualNetworks",
-               "apiVersion":"2018-10-01",
+            "apiVersion": "2018-10-01",
             "name": "[parameters('virtualNetworks_HUB_VNET_name')]",
             "location": "canadacentral",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.0.0.0/27"
+                        "[parameters('virtualNetworks_HUB_VNET_Prefix')]"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "HUB-SUBNET",
+            "name": "HUB-SNET",
+                                    "properties": {
+                            "addressPrefix": "[parameters('HUB-SNET_Prefix')]",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "AzureFirewallSNET",
                         "properties": {
-                            "addressPrefix": "10.0.0.0/27",
+                            "addressPrefix": "[parameters('AzureFirewallSNET_Prefix')]",
+                            "serviceEndpoints": [],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "GatewaySNET",
+                        "properties": {
+                            "addressPrefix": "[parameters('GatewaySNET_Prefix')]",
+                            "serviceEndpoints": [],
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
@@ -39,13 +74,44 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
-               "apiVersion":"2018-10-01",
-            "name": "[concat(parameters('virtualNetworks_HUB_VNET_name'), '/HUB-SUBNET')]",
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('virtualNetworks_HUB_VNET_name'), '/AzureFirewallSNET')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_VNET_name'))]"
             ],
             "properties": {
-                "addressPrefix": "10.0.0.0/27",
+                "addressPrefix": "[parameters('AzureFirewallSNET_Prefix')]",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('virtualNetworks_HUB_VNET_name'), '/GatewaySNET')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_VNET_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[parameters('GatewaySNET_Prefix')]",
+                "serviceEndpoints": [],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "name": "[concat(parameters('virtualNetworks_HUB_VNET_name'), '/HUB-SNET')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_HUB_VNET_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[parameters('HUB-SNET_Prefix')]",
+                "serviceEndpoints": [],
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Enabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"

@@ -11,30 +11,29 @@
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2018-10-01",
             "name": "[parameters('virtualNetworks_Spoke1_Dev_VNET_name')]",
             "location": "canadacentral",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.0.1.0/26"
+                        "10.2.0.0/24"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "Spoke1_Dev-SNET-DB",
+                        "name": "Spoke1_Dev-SNET-App",
                         "properties": {
-                            "addressPrefix": "10.0.1.16/28",
-                            "serviceEndpoints": [],
+                            "addressPrefix": "10.2.0.0/25",
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
                         }
                     },
                     {
-                        "name": "Spoke1_Dev-SNET-App",
+                        "name": "Spoke1_Dev-SNET-DB",
                         "properties": {
-                            "addressPrefix": "10.0.1.0/28",
+                            "addressPrefix": "10.2.0.128/25",
                             "serviceEndpoints": [],
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",
@@ -49,14 +48,13 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2018-10-01",
             "name": "[concat(parameters('virtualNetworks_Spoke1_Dev_VNET_name'), '/Spoke1_Dev-SNET-App')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Spoke1_Dev_VNET_name'))]"
             ],
             "properties": {
-                "addressPrefix": "10.0.1.0/28",
-                "serviceEndpoints": [],
+                "addressPrefix": "10.2.0.0/25",
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Enabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"
@@ -64,13 +62,13 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2018-10-01",
             "name": "[concat(parameters('virtualNetworks_Spoke1_Dev_VNET_name'), '/Spoke1_Dev-SNET-DB')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_Spoke1_Dev_VNET_name'))]"
             ],
             "properties": {
-                "addressPrefix": "10.0.1.16/28",
+                "addressPrefix": "10.2.0.128/25",
                 "serviceEndpoints": [],
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Enabled",

@@ -9,13 +9,24 @@
          "ProdRGName": {
             "defaultValue": "Spoke1_PROD-RG",
             "type": "String"
+        },
+         "DevRGName": {
+            "defaultValue": "Spoke1_DEV-RG",
+            "type": "String"
+        },
+          "UATRGName": {
+            "defaultValue": "Spoke1_UAT-RG",
+            "type": "String"
         }
+
    
    },
    "variables": {
       "peeringTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'LandingZonePeering.json')]",
       "hubTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Hub-RG.json')]",
-      "spokeProdTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_PROD-RG.json')]"
+      "spokeProdTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_PROD-RG.json')]",
+         "spokeDevTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_Dev-RG.json')]",
+          "spokeUATTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'Spoke1_UAT-RG.json')]"
    },
    "resources": [
        {
@@ -30,6 +41,20 @@
             "apiVersion": "2018-05-01",
             "location": "CanadaCentral",
             "name": "Spoke1_PROD-RG",
+            "properties": {}
+      },
+       {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Spoke1_DEV-RG",
+            "properties": {}
+      },
+       {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "CanadaCentral",
+            "name": "Spoke1_UAT-RG",
             "properties": {}
       },
       
@@ -68,6 +93,44 @@
             
             }
       },
+  
+       {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "DevDeployment",
+              "resourceGroup":"Spoke1_DEV-RG",
+            "dependsOn": [
+              "HubRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('DevRGName'))]"
+
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "[variables('spokeDevTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
+      },
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "UATDeployment",
+              "resourceGroup":"Spoke1_DEV-RG",
+            "dependsOn": [
+              "HubRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('UATRGName'))]"
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "[variables('spokeUATTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
+      },
       {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
@@ -76,11 +139,12 @@
             "dependsOn": [
               "HubRGDeployment",
               "SpokeProdRGDeployment",
+              "DevDeployment",
+              "UATDeployment",
                "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]",
-                 "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"
-
-           
-              
+         "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]",
+         "[resourceId('Microsoft.Resources/resourceGroups/', parameters('DevRGName'))]",
+         "[resourceId('Microsoft.Resources/resourceGroups/', parameters('UATRGName'))]"  
             ],
             "properties": {
                "mode": "Incremental",
