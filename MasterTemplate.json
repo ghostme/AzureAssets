@@ -65,6 +65,29 @@
                }
             
             }
+      },
+      {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "PeeringDeployment",
+              "resourceGroup":"Spoke1_PROD-RG",
+            "dependsOn": [
+              "HubRGDeployment",
+              "SpokeProdRGDeployment",
+               "[resourceId('Microsoft.Resources/resourceGroups/', parameters('ProdRGName'))]",
+                 "[resourceId('Microsoft.Resources/resourceGroups/', parameters('HubRGName'))]"
+
+           
+              
+            ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                  "uri": "https://raw.githubusercontent.com/ghostme/AzureAssets/Feature/LandingZonePeering.json",
+                  "contentVersion": "1.0.0.0"
+               }
+            
+            }
       }
    ]
 }
