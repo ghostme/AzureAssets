@@ -3,8 +3,8 @@
     "contentVersion": "1.0.0.0",
     "variables":{
         "baseTemplateLink": "[uri(deployment().properties.templateLink.uri,'/Deploymenturi.json')]",
-     
-         "childTemplateLink":"[replace(variables('baseTemplateLink'),'Networking', 'MasterTemplate')]"
+       "anotherBaseTemplateLink": "[uri(deployment().properties.templateLink.uri,'/Deploymenturi.json')]",
+         "childTemplateLink":"[replace(variables('anotherBaseTemplateLink'),'Networking', 'MasterTemplate')]"
         },
     "resources": [],
     "outputs": {
