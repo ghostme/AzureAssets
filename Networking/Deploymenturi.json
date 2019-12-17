@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "variables":{
+        "baseTemplateLink": "[uri(deployment().properties.templateLink.uri,'Deploymenturi.json')]",
+       "anotherBaseTemplateLink": "[uri(deployment().properties.templateLink.uri,'peering.json')]",
+         "childTemplateLink":"[replace(variables('anotherBaseTemplateLink'),'Networking', 'MasterTemplate')]",
+          "dynamicTemplateLink": "[replace(uri(deployment().properties.templateLink.uri,'peering.json'),'Networking','MasterTemplate')]",
+        },
+    "resources": [],
+    "outputs": {
+        "baseuriOutput": {
+            "type": "string",
+            "value": "[uriComponentToString(variables('baseTemplateLink'))]"
+        },
+         "uriOutput": {
+            "type": "string",
+            "value": "[variables('dynamicTemplateLink')]"
+        }
+    
+    }
+}
+
+
+
