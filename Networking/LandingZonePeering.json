@@ -1,0 +1,341 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "existingLocalVirtualNetworkName": {
+      "type": "string",
+      "defaultValue":"HUB-VNET",
+      "metadata": {
+        "description": "Set the local VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkNameDev": {
+      "type": "string",
+      "defaultValue":"Spoke1_DEV-VNET",
+      "metadata": {
+        "description": "Set the remote Dev VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkNameUAT": {
+      "type": "string",
+      "defaultValue":"Spoke1_UAT-VNET",
+      "metadata": {
+        "description": "Set the remote UAT VNet name"
+      }
+    },
+    "existingRemoteVirtualNetworkNameProd": {
+      "type": "string",
+      "defaultValue":"Spoke1_PROD-VNET",
+      "metadata": {
+        "description": "Set the remote Prod VNet name"
+      }
+    
+    },
+    "existingRemoteVirtualNetworkResourceGroupNameDev": {
+      "type": "string",
+        "defaultValue":"Spoke1_DEV-RG",
+      "metadata": {
+        "description": "Sets the remote Dev VNet Resource group"
+      }
+    },
+    "existingRemoteVirtualNetworkResourceGroupNameUAT": {
+      "type": "string",
+        "defaultValue":"Spoke1_UAT-RG",
+      "metadata": {
+        "description": "Sets the remote UAT VNet Resource group"
+      }
+    },
+    "existingRemoteVirtualNetworkResourceGroupNameProd": {
+      "type": "string",
+        "defaultValue":"Spoke1_PROD-RG",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    
+    },
+     "existingLocalVirtualNetworkResourceGroupName": {
+      "type": "string",
+       "defaultValue":"HUB-RG",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    
+    },
+     "Location": {
+      "type": "string",
+       "defaultValue":"CanadaCentral",
+      "metadata": {
+        "description": "Sets the remote VNet Resource group"
+      }
+    
+    }
+  },
+  "variables": {
+    "PeeringNameDev": "[concat(parameters('existingLocalVirtualNetworkName'), '/hubvnet-to-Devspokevnet')]",
+    "remotePeeringNameDev": "[concat(parameters('existingRemoteVirtualNetworkNameDev'), '/Devspoke-vnet-to-hubvnet')]",
+    "PeeringNameUAT": "[concat(parameters('existingLocalVirtualNetworkName'), '/hubvnet-to-UATspokevnet')]",
+    "remotePeeringNameUAT": "[concat(parameters('existingRemoteVirtualNetworkNameUAT'), '/UATspoke-vnet-to-hubvnet')]",
+    "peeringNameProd": "[concat(parameters('existingLocalVirtualNetworkName'), '/hubvnet-to-Prodspokevnet')]",
+    "remotePeeringNameProd": "[concat(parameters('existingRemoteVirtualNetworkNameProd'), '/Prodspoke-vnet-to-hubvnet')]"
+    
+  },
+  "resources": [
+   {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "HubPeeringDeploymentProd",
+            "resourceGroup":"[parameters('existingLocalVirtualNetworkResourceGroupName')]",
+           
+            "dependsOn": [
+              
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    
+                      "resources": [
+                           {
+                          "apiVersion": "2018-10-01",
+                          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                          "name": "[variables('peeringNameProd')]",
+                          "location": "[parameters('Location')]",
+                          "comments": "This is the peering from Hub-Vnet to ProdSpoke-VNet",
+                          "dependsOn": [
+                        
+                          ],
+                          "properties": {
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteVirtualNetwork": {
+                              "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingRemoteVirtualNetworkResourceGroupNameProd'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingRemoteVirtualNetworkNameProd'))]"
+                           
+
+                            }
+                          }
+                        }
+                       ]
+                       
+                      }
+   }
+                        
+   },
+   {
+    "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
+    "name": "SpokePeeringDeploymentProd",
+    "resourceGroup": "[parameters('existingRemoteVirtualNetworkResourceGroupNameProd')]",
+    "dependsOn": [
+      
+    ],
+    "properties": {
+        "mode": "Incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            
+              "resources": [
+                   {
+                  "apiVersion": "2018-10-01",
+                  "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                  "name": "[variables('remotePeeringNameProd')]",
+                  "location": "[parameters('Location')]",
+                  "comments": "This is the peering from ProdSpoke Vnet to HubVnet",
+                  "dependsOn": [
+                 
+                 
+                  ],
+                  "properties": {
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": false,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": false,
+                    "remoteVirtualNetwork": {
+                  
+                     "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingLocalVirtualNetworkResourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingLocalVirtualNetworkName'))]"
+
+                    }
+                  }
+                }
+               ]
+            }    
+      }
+   },       
+{
+            "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
+    "name": "HubPeeringDeploymentDev",
+    "resourceGroup":"[parameters('existingLocalVirtualNetworkResourceGroupName')]",
+   
+    "dependsOn": [
+      
+    ],
+    "properties": {
+        "mode": "Incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            
+              "resources": [
+                   {
+                  "apiVersion": "2018-10-01",
+                  "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                  "name": "[variables('peeringNameDev')]",
+                  "location": "[parameters('Location')]",
+                  "comments": "This is the peering from Hub-Vnet to Dev Spoke-VNet",
+                  "dependsOn": [
+                
+                  ],
+                  "properties": {
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": false,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": false,
+                    "remoteVirtualNetwork": {
+                      "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingRemoteVirtualNetworkResourceGroupNameDev'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingRemoteVirtualNetworkNameDev'))]"
+                   
+
+                    }
+                  }
+                }
+               ]
+               
+              }
+            }
+                
+},
+{
+    "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
+    "name": "SpokePeeringDeploymentDev",
+    "resourceGroup": "[parameters('existingRemoteVirtualNetworkResourceGroupNameDev')]",
+    "dependsOn": [
+      
+    ],
+    "properties": {
+        "mode": "Incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            
+              "resources": [
+                   {
+                  "apiVersion": "2018-10-01",
+                  "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                  "name": "[variables('remotePeeringNameDev')]",
+                  "location": "[parameters('Location')]",
+                  "comments": "This is the peering from Dev Spoke Vnet to HubVnet",
+                  "dependsOn": [
+                 
+                 
+                  ],
+                  "properties": {
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": false,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": false,
+                    "remoteVirtualNetwork": {
+                  
+                     "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingLocalVirtualNetworkResourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingLocalVirtualNetworkName'))]"
+
+                    }
+                  }
+                }
+               ]
+               
+              }
+            }
+        },
+                
+            {
+                "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2018-05-01",
+        "name": "HubPeeringDeploymentUAT",
+        "resourceGroup":"[parameters('existingLocalVirtualNetworkResourceGroupName')]",
+       
+        "dependsOn": [
+          
+        ],
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                
+                  "resources": [
+                       {
+                      "apiVersion": "2018-10-01",
+                      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                      "name": "[variables('peeringNameUAT')]",
+                      "location": "[parameters('Location')]",
+                      "comments": "This is the peering from Hub-Vnet to UAT Spoke-VNet",
+                      "dependsOn": [
+                    
+                      ],
+                      "properties": {
+                        "allowVirtualNetworkAccess": true,
+                        "allowForwardedTraffic": false,
+                        "allowGatewayTransit": false,
+                        "useRemoteGateways": false,
+                        "remoteVirtualNetwork": {
+                          "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingRemoteVirtualNetworkResourceGroupNameUAT'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingRemoteVirtualNetworkNameUAT'))]"
+                       
+    
+                        }
+                      }
+                    }
+                   ]
+                   
+                  }
+                }
+                    
+    },
+    {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2018-05-01",
+        "name": "SpokePeeringDeploymentUAT",
+        "resourceGroup": "[parameters('existingRemoteVirtualNetworkResourceGroupNameUAT')]",
+        "dependsOn": [
+          
+        ],
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                
+                  "resources": [
+                       {
+                      "apiVersion": "2018-10-01",
+                      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                      "name": "[variables('remotePeeringNameUAT')]",
+                      "location": "[parameters('Location')]",
+                      "comments": "This is the peering from UAT Spoke Vnet to HubVnet",
+                      "dependsOn": [
+                     
+                     
+                      ],
+                      "properties": {
+                        "allowVirtualNetworkAccess": true,
+                        "allowForwardedTraffic": false,
+                        "allowGatewayTransit": false,
+                        "useRemoteGateways": false,
+                        "remoteVirtualNetwork": {
+                      
+                         "id": "[concat(subscription().id,'/resourceGroups/',parameters('existingLocalVirtualNetworkResourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('existingLocalVirtualNetworkName'))]"
+    
+                        }
+                      }
+                    }
+                   ]
+                   
+                  }
+                }
+                    
+    
+        }  
+  ]
+}
