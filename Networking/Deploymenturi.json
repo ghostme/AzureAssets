@@ -2,13 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "variables":{
-        "templateLink": "[uri(deployment().properties.templateLink.uri,'Networking/Deploymenturi.json')]"
+        "baseTemplateLink": "[uri(deployment().properties.templateLink.uri,'/Deploymenturi.json')]",
+     
+         "childTemplateLink":"[replace(variables('baseTemplateLink'),'Networking', 'MasterTemplate')]"
         },
     "resources": [],
     "outputs": {
-        "uriOutput": {
+        "baseuriOutput": {
             "type": "string",
-            "value": "[variables('templateLink')]"
+            "value": "[variables('baseTemplateLink')]"
+        },
+         "uriOutput": {
+            "type": "string",
+            "value": "[variables('childTemplateLink')]"
         }
+    
     }
 }
+
+
+
