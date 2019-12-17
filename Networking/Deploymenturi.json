@@ -4,7 +4,8 @@
     "variables":{
         "baseTemplateLink": "[uri(deployment().properties.templateLink.uri,'Deploymenturi.json')]",
        "anotherBaseTemplateLink": "[uri(deployment().properties.templateLink.uri,'peering.json')]",
-         "childTemplateLink":"[replace(variables('anotherBaseTemplateLink'),'Networking', 'MasterTemplate')]"
+         "childTemplateLink":"[replace(variables('anotherBaseTemplateLink'),'Networking', 'MasterTemplate')]",
+          "dynamicTemplateLink": "[replace(uri(deployment().properties.templateLink.uri,'peering.json'),'Networking','MasterTemplate')]",
         },
     "resources": [],
     "outputs": {
@@ -14,7 +15,7 @@
         },
          "uriOutput": {
             "type": "string",
-            "value": "[variables('childTemplateLink')]"
+            "value": "[variables('dynamicTemplateLink')]"
         }
     
     }
