@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "variables":{
         "baseTemplateLink": "[uri(deployment().properties.templateLink.uri,'Deploymenturi.json')]",
-       "anotherBaseTemplateLink": "[uri(deployment().properties.templateLink.uri,'Deploymenturi.json')]",
+       "anotherBaseTemplateLink": "[uri(deployment().properties.templateLink.uri,'peering.json')]",
          "childTemplateLink":"[replace(variables('anotherBaseTemplateLink'),'Networking', 'MasterTemplate')]"
         },
     "resources": [],
