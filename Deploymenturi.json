@@ -10,7 +10,7 @@
     "outputs": {
         "baseuriOutput": {
             "type": "string",
-            "value": "[variables('baseTemplateLink')]"
+            "value": "[uriComponentToString(variables('baseTemplateLink'))]"
         },
          "uriOutput": {
             "type": "string",
