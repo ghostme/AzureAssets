@@ -24,10 +24,10 @@
    "variables": {
      
       "peeringTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'LandingZonePeering.json'),'MasterTemplate','Networking')]",
-      "hubTemplateUrl": "[replace(uri(deployment().properties.templateLink.uri,'Hub-RG.json'),'MasterTemplate','Networking')]",
-      "spokeProdTemplateUrl": "[replace(uri(deployment().properties.templateLink.uri,'Spoke1_PROD-RG.json'),'MasterTemplate','Networking')]",
-         "spokeDevTemplateUrl":  "[replace(uri(deployment().properties.templateLink.uri,'Spoke1_Dev-RG.json'),'MasterTemplate','Networking')]",
-          "spokeUATTemplateUrl":  "[replace(uri(deployment().properties.templateLink.uri,'Spoke1_UAT-RG.json'),'MasterTemplate','Networking')]"
+      "hubTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Hub-RG.json'),'MasterTemplate','Networking')]",
+      "spokeProdTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Spoke1_PROD-RG.json'),'MasterTemplate','Networking')]",
+         "spokeDevTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Spoke1_Dev-RG.json'),'MasterTemplate','Networking')]",
+          "spokeUATTemplateUrl": "[replace(uri(deployment().properties.templateLink.uri,'Spoke1_UAT-RG.json'),'MasterTemplate','Networking')]"
    },
   
   
