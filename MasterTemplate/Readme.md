@@ -1,5 +1,1 @@
-Master template deployment stepsdadadadada
-dadad Doky of life
-adaddadasdadadad
-sjjjjsj KSK KS KAK SK
-ofdosoosoos kskksksksksks
+Thank you Lord you have answered my prayers
