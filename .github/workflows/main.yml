@@ -17,12 +17,10 @@ jobs:
       uses: actions/checkout@master
 
     - name: Azure - Login
-      uses: Azure/github-actions/login@master
+      uses: azure/login@v1
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - run: |
         az group deployment create -n ghaction -g ${{ env.AZURE_GROUP_NAME }} --template-file Networking/Deploymenturi.json
-    - name: logout
-    - run: |
-            az logout
+ 
     
