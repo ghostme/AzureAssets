@@ -20,7 +20,6 @@ jobs:
       uses: Azure/github-actions/login@master
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
     - run: |
         az group deployment create -n ghaction -g ${{ env.AZURE_GROUP_NAME }} --template-file Networking/Deploymenturi.json
     - name: logout
