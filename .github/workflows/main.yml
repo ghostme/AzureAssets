@@ -21,6 +21,6 @@ jobs:
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - run: |
-        az group deployment create -n ghaction -g ${{ env.AZURE_GROUP_NAME }} --template-uri https://raw.githubusercontent.com/ghostme/AzureAssets/master/Networking/Deploymenturi.json
+       az storage blob upload-batch -d github --account-name dccxxsihqdjssceg7a -s MasterTemplate/ --pattern *.json --destination-path MasterTemplate/
  
     
