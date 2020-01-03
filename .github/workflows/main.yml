@@ -4,9 +4,10 @@ on:
  push:
     branches:
     - master
-    path:
+    paths:
       - MasterTemplate/*
-
+env:
+   AZURE_GROUP_NAME: Test-RG
 jobs:
   deploy:
     name: Deploy to Azure
@@ -16,15 +17,10 @@ jobs:
       uses: actions/checkout@master
 
     - name: Azure - Login
-      uses: Azure/github-actions/login@master
-      env:
-        AZURE_SUBSCRIPTION: Visual Studio Ultimate with MSDN
-        AZURE_SERVICE_APP_ID: ${ { secrets.AZURE_SERVICE_APP_ID } }
-        AZURE_SERVICE_PASSWORD: ${ { secrets.AZURE_SERVICE_PASSWORD } }
-        AZURE_SERVICE_TENANT: ${ { secrets.AZURE_SERVICE_TENANT } }
-
-    - name: Azure - Deploy ARM Template
-      uses: Azure/github-actions/arm@master
-      env:
-        AZURE_RESOURCE_GROUP: github-actions
-        AZURE_TEMPLATE_LOCATION: ./Networking/Deploymenturi.json
+      uses: azure/login@v1
+      with:
+       creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - run: |
+        az group deployment create -n ghaction -g ${{ env.AZURE_GROUP_NAME }} --template-file Networking/Deploymenturi.json
+ 
+    
