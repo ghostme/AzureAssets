@@ -27,4 +27,4 @@ jobs:
       uses: Azure/github-actions/arm@master
       env:
         AZURE_RESOURCE_GROUP: github-actions
-        AZURE_TEMPLATE_LOCATION: ./MasterTemplate/Deploymenturi.json
+        AZURE_TEMPLATE_LOCATION: ./Networking/Deploymenturi.json
