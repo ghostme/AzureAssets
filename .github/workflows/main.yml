@@ -7,7 +7,7 @@ on:
     paths:
       - MasterTemplate/*
 env:
-   AZURE_GROUP_NAME: Test-RG
+   SOURCE_FOLDER: /MasterTemplate/*
 jobs:
   deploy:
     name: Deploy to Azure
@@ -21,6 +21,6 @@ jobs:
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - run: |
-       az storage blob upload-batch -d github --account-name dccxxsihqdjssceg7a -s MasterTemplate/ --pattern *.json --destination-path MasterTemplate/
+       az storage blob upload-batch -d github --account-name dccxxsihqdjssceg7a -s ${{ env.SOURCE_FOLDER }} --pattern *.json --destination-path MasterTemplate/
  
     
