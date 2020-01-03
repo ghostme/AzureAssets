@@ -7,7 +7,7 @@ on:
     paths:
       - MasterTemplate/*
 env:
-   SOURCE_FOLDER: /MasterTemplate/*
+   SOURCE_FOLDER: MasterTemplate
 jobs:
   deploy:
     name: Deploy to Azure
