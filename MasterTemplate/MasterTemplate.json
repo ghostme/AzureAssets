@@ -2,6 +2,9 @@
    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
    "contentVersion": "1.0.0.1",
    "parameters": {
+    "resourceGroupInfo": {
+      "type": "array"
+    },
         "HubRGName": {
             "defaultValue": "Hub-RG",
             "type": "String"
@@ -18,49 +21,45 @@
             "defaultValue": "Spoke1_UAT-RG",
             "type": "String"
         }
-
+     
    
    },
    "variables": {
-     
-      "peeringTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'LandingZonePeering.json'),'MasterTemplate','Networking')]",
-      "hubTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Hub-RG.json'),'MasterTemplate','Networking')]",
-      "spokeProdTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Spoke1_PROD-RG.json'),'MasterTemplate','Networking')]",
-         "spokeDevTemplateUrl":"[replace(uri(deployment().properties.templateLink.uri,'Spoke1_Dev-RG.json'),'MasterTemplate','Networking')]",
-          "spokeUATTemplateUrl": "[replace(uri(deployment().properties.templateLink.uri,'Spoke1_UAT-RG.json'),'MasterTemplate','Networking')]"
+        "templateRoot":"[deployment().properties.templateLink.uri]",
+  "hasToken":"[not(equals(indexOf(variables('templateRoot'),'?'), -1))]",
+  "sasToken":"[if(variables('hasToken'),substring(variables('templateRoot'),indexOf(variables('templateRoot'),'?')),'')]",
+  "peeringTemplateUrl": "[replace(concat(uri(deployment().properties.templateLink.uri,'LandingZonePeering.json'),variables('sasToken')),'MasterTemplate','Networking')]",
+     "hubTemplateUrl": "[replace(concat(uri(deployment().properties.templateLink.uri,'Hub-VNET.json'),variables('sasToken')),'MasterTemplate','Networking')]",
+     "spokeProdTemplateUrl":"[replace(concat(uri(deployment().properties.templateLink.uri,'Spoke1_PROD-VNET.json'),variables('sasToken')),'MasterTemplate','Networking')]",
+      "spokeDevTemplateUrl":"[replace(concat(uri(deployment().properties.templateLink.uri,'Spoke1_DEV-VNET.json'),variables('sasToken')),'MasterTemplate','Networking')]",
+     "spokeUATTemplateUrl":"[replace(concat(uri(deployment().properties.templateLink.uri,'Spoke1_UAT-VNET.json'),variables('sasToken')),'MasterTemplate','Networking')]",
+   
+     "multiLocation": {
+      "copy": [
+        {
+          "name": "location",
+          "count": "[length(parameters('resourceGroupInfo'))]",
+          "input": {
+            "resourceGroupName": "[concat(parameters('resourceGroupInfo')[copyIndex('location')].resourceGroupName )]"
+          
+          }
+        }
+      ]
+    }
    },
-  
-  
    "resources": [
        {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "CanadaCentral",
-            "name": "Hub-RG",
-            "properties": {}
-      },
-      {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "CanadaCentral",
-            "name": "Spoke1_PROD-RG",
-            "properties": {}
-      },
-       {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "CanadaCentral",
-            "name": "Spoke1_DEV-RG",
-            "properties": {}
-      },
-       {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "CanadaCentral",
-            "name": "Spoke1_UAT-RG",
-            "properties": {}
-      },
+      "type": "Microsoft.Resources/resourceGroups",
+      "location": "[parameters('resourceGroupInfo')[copyIndex()].resourceGroupLocation]",
+      "name": "[variables('multiLocation').location[copyIndex()].resourceGroupName]",
+      "apiVersion": "2018-05-01",
       
+      "copy": {
+        "name": "allResourceGroups",
+        "count": "[length(parameters('resourceGroupInfo'))]"
+      },
+      "properties": {}
+    },
       {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",

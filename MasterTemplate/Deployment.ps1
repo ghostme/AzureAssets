@@ -1,0 +1,3 @@
+$storageAccount=Get-AzStorageAccount -ResourceGroupName "DCC-SHS-RG" -Name "dccshsrgdiag907"
+ $sasToken=New-AzStorageContainerSASToken -Name "landingzone" -Permission r -Context  $storageAccount.Context -ExpiryTime([datetime]::Now.AddMinutes(30.0))
+ New-AzDeployment -Name LandingZoneDeployment -location "CanadaCentral" -TemplateUri https://dccshsrgdiag907.blob.core.windows.net/landingzone/MasterTemplate/MasterTemplate.json$sasToken -TemplateParameterUri https://dccshsrgdiag907.blob.core.windows.net/landingzone/MasterTemplate/parameters.json$sasToken
